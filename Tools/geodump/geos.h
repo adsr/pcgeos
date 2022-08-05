@@ -1,7 +1,7 @@
 /*
         GEOS.H
 
-        by Marcus Gr�ber 1992-95
+        by Marcus Gr?ber 1992-95
 
         Include file for the PC/GEOS file format
 */
@@ -252,5 +252,14 @@ typedef struct {                        /*** Base type of storage block list */
 
 /*** Nimbus Q font files (Geos-specific format) ***/
 #include "nimbus.h"                     
+
+#define min(a,b) ((a) < (b) ? (a) : (b))
+#define max(a,b) ((a) > (b) ? (a) : (b))
+#define _MAX_PATH 4096
+#define _MAX_DRIVE 4096
+#define _MAX_NAME 4096
+#define _MAX_FNAME 4096
+#define _MAX_EXT 4096
+#define _MAX_DIR 4096
 
 #endif

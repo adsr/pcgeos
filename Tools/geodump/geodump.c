@@ -1,7 +1,7 @@
 /*
         GEODUMP.C
 
-        by Marcus Gr�ber 1991-95
+        by Marcus Gr?ber 1991-95
 
         Creates structured dumps of PC/Geos files (Geodes, VM Files, fonts)
 */
@@ -11,6 +11,7 @@
 #include <string.h>
 #include <malloc.h>
 #include <ctype.h>
+#include <stdint.h>
 
 #include "geos.h"
 #include "geos2.h"
@@ -49,7 +50,7 @@ GEOSexplist *expt;              // Export-Routinen
 GEOSliblist *lib;               // Library-Namen
 char selfname[GEOS_FNAME+1];    // Base name of currently disassembled geode
 
-unsigned dodump,dolist,disasm_silent,engine_silent;
+unsigned short dodump,dolist,disasm_silent,engine_silent;
 int one_segment;                // if >=0, number of only segment to be dumped
 int one_pass;                   // if non-zero, indicates that listing is to
                                 // be generated in first pass
@@ -58,6 +59,19 @@ unsigned global_inf_changed;
 
 
 /******************************************************************************/
+
+
+int stricmp(char *a, char *b) {
+  int ca, cb;
+  do {
+     ca = (unsigned char) *a++;
+     cb = (unsigned char) *b++;
+     ca = tolower(toupper(ca));
+     cb = tolower(toupper(cb));
+   } while (ca == cb && ca != '\0');
+   return ca - cb;
+}
+
 char *strncpy2(char *d,char *s,int n)
 {
         strncpy(d,s,n);
@@ -784,6 +798,7 @@ void DisplayGeosFile(FILE *f)
         char buf1[80],buf2[80];
         unsigned class;
         long magic;
+        uint32_t geos_id=GEOS_ID;
 
         /* Description of some file attributes */
         struct MaskDesc_s fileAttrMask[] = {
@@ -803,7 +818,7 @@ void DisplayGeosFile(FILE *f)
 
         fseek(f,0,SEEK_SET);            // Anfang neu einlesen
         fread(&hd,sizeof(hd),1,f);
-        if(hd.h1.ID==GEOS_ID) {         // G1-Identifikation stimmt?
+        if(memcmp(hd.h1.ID, &geos_id, sizeof(geos_id)) == 0) {
 
 /*** Version 1 header ***/
           GeosToIBM(hd.h1.name,1);      // Zeichensatz konvertieren
@@ -824,7 +839,7 @@ void DisplayGeosFile(FILE *f)
 
           ver=1;
           base=0;
-          class=hd.h1.class;            // Dateityp speichern
+          class=hd.h1.class[0];            // Dateityp speichern
         }
         else if(hd.h2.ID==GEOS2_ID) {   // G2-Identifikation stimmt?
 
@@ -912,7 +927,7 @@ void main(int argc,char *argv[])
           i++;                          // Parameter �bergehen
         }
         if(argc<=i) {                   // Zu wenig Parameter?
-          puts("\nGeoDump 0.5 -=- by Marcus Gr�ber, "__DATE__"\n"
+          puts("\nGeoDump 0.5 -=- by Marcus Gr?ber, "__DATE__"\n"
                  "Disassembly engine based on a module by Robin Hilliard\n\n"
                  "Analysis of PC/Geos file formats\n");
 
@@ -926,10 +941,13 @@ void main(int argc,char *argv[])
         }
 
 	printf("argv[i]: %s\n", argv[i]);
+	/*
         _splitpath(argv[i],drive,dir,name,ext);
         if(*ext=='\0')                  // Extension fehlt: GEO annehmen
           strcpy(ext,".GEO");
         _makepath(path,drive,dir,name,ext);
+        */
+        snprintf(path, _MAX_PATH, "%s", argv[i]);
 
         if(!(f=fopen(path,"rb"))) {     // Datei zum Lesen �ffnen
           puts("File not found.");

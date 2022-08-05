@@ -1,7 +1,7 @@
 /*
         GEOS2.H
 
-        by Marcus Gr�ber 1993-94
+        by Marcus Gr?ber 1993-94
 
         Include file for the PC/GEOS 2 file format
         Requires GEOS.H to be included first.

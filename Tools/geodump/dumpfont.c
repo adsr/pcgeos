@@ -1,7 +1,7 @@
 /*
         DUMPFONT.C
 
-        by Marcus Gr”ber 1991-95
+        by Marcus Gr?ber 1991-95
 
         Creates structured dumps of PC/Geos files (Geodes, VM Files, fonts)
 */
@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dos.h>
+// #include <dos.h>
 #include <malloc.h>
 
 #include "geos.h"

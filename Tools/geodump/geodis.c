@@ -1,7 +1,7 @@
 /*
         GEODIS.C
 
-        by Marcus Gr�ber 1995
+        by Marcus Gr?ber 1995
 
         Geos-specific routines for disassembly engine
 */
@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
+#include <ctype.h>
 
 #include "geos.h"
 #include "geos2.h"
@@ -20,7 +21,7 @@ extern unsigned numexp;
 extern GEOSexplist *expt;
 extern GEOSliblist *lib;
 extern char selfname[GEOS_FNAME+1];
-extern engine_silent;
+extern short engine_silent;
 extern struct {
   GEOSseglen len;
   GEOSsegpos pos;

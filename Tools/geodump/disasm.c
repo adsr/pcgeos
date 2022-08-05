@@ -2,7 +2,7 @@
    ESDE 0.92� (pre-release for GeoDump 0.5)
    Embedded Segment Disassembler Engine
 
-   by Marcus Gr�ber 1993-94, based on original 2asm sourcecode
+   by Marcus Gr?ber 1993-94, based on original 2asm sourcecode
    This code was last compiled on MSC7, but it should be fairly easy to port...
 
    Being a GNU type thing, the license below is inherited for this code. :-)
@@ -76,6 +76,7 @@ Any comments/updates/bug reports to:
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include "geos.h"
 
 
 /*
@@ -115,7 +116,7 @@ static word8 must_do_size;  /* used with do_size */
 
 static int wordop;           /* dealing with word or byte operand */
 static word8 instruction_length;
-static instruction_offset;
+static short instruction_offset;
 static word16 done_space; /* for opcodes with > one space */
 static word8 patch87;     /* fudge variable used in 8087 emu patching code */
 
@@ -188,8 +189,8 @@ static char *addr_to_hex(int32,char);
 static word8 getbyte(void);
 static word8 silent_getbyte(void);
 static word8 silent_returnbyte(word8 );
-static modrm(void);
-static sib(void);
+static short modrm(void);
+static short sib(void);
 static void uprintf(char *, ...);
 static void uputchar(char );
 static int bytes(char );
@@ -208,7 +209,7 @@ static word16 jmp_count;
 static void init_jmp_map(void)
 {
         jmp_count = 0;                  /* no jump targets in segment yet */
-        _fmemset(jmp_map,0,sizeof(jmp_map));
+        memset(jmp_map,0,sizeof(jmp_map));
                                         /* reset jump target map */
 }
 
@@ -296,7 +297,7 @@ static word8 silent_returnbyte(word8 c)
    returned a few times...
 */
 
-static modrm(void)
+static short modrm(void)
 {
   if (modrmv == -1)
     modrmv = getbyte();
@@ -304,7 +305,7 @@ static modrm(void)
 }
 
 
-static sib(void)
+static short sib(void)
 {
   if (sibv == -1)
     sibv = getbyte();
